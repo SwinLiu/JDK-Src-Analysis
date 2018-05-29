@@ -57,7 +57,7 @@ public class Object {
 
 ```
 
-![Object Class Pic](pic/java/lang/Object_class.jpg)
+![Object Class Pic](images/Object_class.jpg)
 
 ## 二、源码解析：
 
