@@ -1,5 +1,5 @@
 ﻿
-# 源码摘要
+## 一、源码摘要
 
 ```java
 package java.lang;
@@ -57,20 +57,22 @@ public class Object {
 
 ```
 
-# 源码解析：
+![Object Class Pic](pic/java/lang/Object_class.jpg)
+
+## 二、源码解析：
 
 Object类是Java中其他所有类的祖先。
 
-## 构造函数
+### 构造函数
 
 未定义构造函数,默认一个无参数的构造函数,`public Object(){};`
 
-## 属性
+### 属性
 无
 
-## 方法
+### 方法
 
-### `private static native void registerNatives();`
+#### `private static native void registerNatives();`
 
 registerNatives函数前面有native关键字修饰，Java中，用native关键字修饰的函数表明该方法的实现并不是在Java中去完成，而是由C/C++去完成，并被编译成了.dll，由Java去调用。方法的具体实现体在dll文件中，对于不同平台，其具体实现应该有所不同。用native修饰，即表示操作系统，需要提供此方法，Java本身需要使用。具体到registerNatives()方法本身，其主要作用是将C/C++中的方法映射到Java中的native方法，实现方法命名的解耦。
 
@@ -82,20 +84,20 @@ Object 对象创建时调用注册。 由静态方法在初始化执行。
     }
 ```
 
-### `public final native Class<?> getClass();`
-native的方法
+#### `public final native Class<?> getClass();`
+native的方法。返回的是此Object对象的类对象/运行时类对象Class<?>。效果与Object.class相同。
 
-### `public native int hashCode();`
-native的方法
+#### `public native int hashCode();`
+native的方法。hashCode()方法返回一个整形数值，表示该对象的哈希码值。
 
-### `equals`方法
+#### `equals`方法
 ```java
 	public boolean equals(Object obj) {
         return (this == obj);
     }
 ```
 
-### `protected native Object clone() throws CloneNotSupportedException;`
+#### `protected native Object clone() throws CloneNotSupportedException;`
 native的方法。Java术语表述为：clone函数返回的是一个引用，指向的是新的clone出来的对象，此对象与原对象分别占用不同的堆空间。
 
 
@@ -175,7 +177,7 @@ public class ObjectTest implements Cloneable {
 ```
 
 
-### `toString`方法
+#### `toString`方法
 ```java
 	public String toString() {
         return getClass().getName() + "@" + Integer.toHexString(hashCode());
@@ -183,13 +185,13 @@ public class ObjectTest implements Cloneable {
 ```
 
 
-### `public final native void notify();`
+#### `public final native void notify();`
 native的方法。
 
-### `public final native void notifyAll();`
+#### `public final native void notifyAll();`
 native的方法。
 
-### `wait`方法
+#### `wait`方法
 
 `public final native void wait(long timeout) throws InterruptedException;`
 native的方法。
@@ -220,14 +222,23 @@ java
     }
 ```
 
+wait(long timeout, int nanos)方法定义内部实质上也是通过调用wait(long timeout)完成。而wait(long timeout)是一个native方法。因此，wait(...)方法本质上都是native方式实现。
+
+notify()/notifyAll()方法也都是native方法。
 
 
-### `protected void finalize() throws Throwable { }`
 
 
+#### `protected void finalize() throws Throwable { }`
+
+finalize方法主要与Java垃圾回收机制有关。首先我们看一下finalized方法在Object中的具体定义：
+
+我们发现Object类中finalize方法被定义成一个空方法，为什么要如此定义呢？finalize方法的调用时机是怎么样的呢？
+
+首先，Object中定义finalize方法表明Java中每一个对象都将具有finalize这种行为，其具体调用时机在：JVM准备对此对形象所占用的内存空间进行垃圾回收前，将被调用。由此可以看出，此方法并不是由我们主动去调用的（虽然可以主动去调用，此时与其他自定义方法无异）。
 
 
-参考文献：
+_参考文献：_
 [https://www.cnblogs.com/lwbqqyumidi/p/3693015.html](https://www.cnblogs.com/lwbqqyumidi/p/3693015.html)
 
 
